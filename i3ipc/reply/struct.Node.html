@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Node` struct in crate `i3ipc`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Node">
+
+    <title>i3ipc::reply::Node - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='../index.html'>i3ipc</a>::<wbr><a href='index.html'>reply</a></p><script>window.sidebarCurrent = {name: 'Node', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>i3ipc</a>::<wbr><a href='index.html'>reply</a>::<wbr><a class='struct' href=''>Node</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-194' class='srclink' href='../../src/i3ipc/src/reply.rs.html#110-178' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Node {
+    pub nodes: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../i3ipc/reply/struct.Node.html' title='i3ipc::reply::Node'>Node</a>&gt;,
+    pub id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>,
+    pub name: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;,
+    pub nodetype: <a class='enum' href='../../i3ipc/reply/enum.NodeType.html' title='i3ipc::reply::NodeType'>NodeType</a>,
+    pub border: <a class='enum' href='../../i3ipc/reply/enum.NodeBorder.html' title='i3ipc::reply::NodeBorder'>NodeBorder</a>,
+    pub current_border_width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>,
+    pub layout: <a class='enum' href='../../i3ipc/reply/enum.NodeLayout.html' title='i3ipc::reply::NodeLayout'>NodeLayout</a>,
+    pub percent: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>&gt;,
+    pub rect: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>,
+    pub window_rect: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>,
+    pub deco_rect: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>,
+    pub geometry: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>,
+    pub window: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;,
+    pub urgent: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
+    pub focused: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
+}</pre><div class='docblock'><p>The reply to the <code>get_tree</code> request.</p>
+</div><h2 class='fields'>Fields</h2><span id='structfield.nodes' class='structfield'><code>nodes: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../i3ipc/reply/struct.Node.html' title='i3ipc::reply::Node'>Node</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>The child nodes of this container.</p>
+</div><span id='structfield.id' class='structfield'><code>id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>The internal ID (actually a C pointer value) of this container. Do not make any
+assumptions about it. You can use it to (re-)identify and address containers when
+talking to i3.</p>
+</div><span id='structfield.name' class='structfield'><code>name: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>The internal name of this container. For all containers which are part of the tree
+structure down to the workspace contents, this is set to a nice human-readable name of
+the container. For containers that have an X11 window, the content is the title
+(_NET_WM_NAME property) of that window. For all other containers, the content is not
+defined (yet).</p>
+</div><span id='structfield.nodetype' class='structfield'><code>nodetype: <a class='enum' href='../../i3ipc/reply/enum.NodeType.html' title='i3ipc::reply::NodeType'>NodeType</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Type of this container. Can be one of &quot;root&quot;, &quot;output&quot;, &quot;con&quot;, &quot;floating_con&quot;,
+&quot;workspace&quot; or &quot;dockarea&quot;. </p>
+</div><span id='structfield.border' class='structfield'><code>border: <a class='enum' href='../../i3ipc/reply/enum.NodeBorder.html' title='i3ipc::reply::NodeBorder'>NodeBorder</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Can be either &quot;normal&quot;, &quot;none&quot; or &quot;1pixel&quot;, dependending on the container’s border
+style. </p>
+</div><span id='structfield.current_border_width' class='structfield'><code>current_border_width: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Number of pixels of the border width.</p>
+</div><span id='structfield.layout' class='structfield'><code>layout: <a class='enum' href='../../i3ipc/reply/enum.NodeLayout.html' title='i3ipc::reply::NodeLayout'>NodeLayout</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Can be either &quot;splith&quot;, &quot;splitv&quot;, &quot;stacked&quot;, &quot;tabbed&quot;, &quot;dockarea&quot; or &quot;output&quot;. Other values
+might be possible in the future, should we add new layouts.</p>
+</div><span id='structfield.percent' class='structfield'><code>percent: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.f64.html'>f64</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>The percentage which this container takes in its parent. A value of null means that the
+percent property does not make sense for this container, for example for the root
+container. </p>
+</div><span id='structfield.rect' class='structfield'><code>rect: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>The (x, y, width, height) absolute display coordinates for this container. Display
+coordinates means that when you have two 1600x1200 monitors on a single X11 Display
+(the standard way), the coordinates of the first window on the second monitor are
+(1600, 0, 1600, 1200).</p>
+</div><span id='structfield.window_rect' class='structfield'><code>window_rect: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>The (x, y, width, height) coordinates of the actual client window inside its container.
+These coordinates are  relative to the container and do not include the window
+decoration (which is actually rendered on the parent container). So for example, when
+using the default layout, you will have a 2 pixel border on each side, making the
+window_rect (2, 0, 632, 366).</p>
+</div><span id='structfield.deco_rect' class='structfield'><code>deco_rect: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>The (x, y, width, height) coordinates of the window decoration inside its container.
+These coordinates are relative to the container and do not include the actual client
+window. </p>
+</div><span id='structfield.geometry' class='structfield'><code>geometry: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>The original geometry the window specified when i3 mapped it. Used when switching a
+window to floating mode, for example. </p>
+</div><span id='structfield.window' class='structfield'><code>window: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;</code>
+                           </span><span class='stab '></span><div class='docblock'><p>The X11 window ID of the actual client window inside this container. This field is set
+to null for split containers or otherwise empty containers. This ID corresponds to what
+xwininfo(1) and other X11-related tools display (usually in hex). </p>
+</div><span id='structfield.urgent' class='structfield'><code>urgent: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Whether this container (window or workspace) has the urgency hint set.</p>
+</div><span id='structfield.focused' class='structfield'><code>focused: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span><span class='stab '></span><div class='docblock'><p>Whether this container is currently focused.</p>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../i3ipc/reply/struct.Node.html' title='i3ipc::reply::Node'>Node</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-174' class='srclink' href='../../src/i3ipc/src/reply.rs.html#109' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+<div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../";
+        window.currentCrate = "i3ipc";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../jquery.js"></script>
+    <script src="../../main.js"></script>
+    
+    <script defer src="../../search-index.js"></script>
+</body>
+</html>

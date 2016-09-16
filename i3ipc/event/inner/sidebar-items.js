@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["BindingChange","The kind of binding change."],["InputType","Either keyboard or mouse."],["OutputChange","The kind of output change."],["WindowChange","The kind of window change."],["WorkspaceChange","The kind of workspace change."]],"struct":[["Binding","Contains details about the binding that was run."]]});

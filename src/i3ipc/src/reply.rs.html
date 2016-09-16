@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="Source to the Rust file `src/reply.rs`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang">
+
+    <title>reply.rs.html -- source</title>
+
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<span id="2">  2</span>
+<span id="3">  3</span>
+<span id="4">  4</span>
+<span id="5">  5</span>
+<span id="6">  6</span>
+<span id="7">  7</span>
+<span id="8">  8</span>
+<span id="9">  9</span>
+<span id="10"> 10</span>
+<span id="11"> 11</span>
+<span id="12"> 12</span>
+<span id="13"> 13</span>
+<span id="14"> 14</span>
+<span id="15"> 15</span>
+<span id="16"> 16</span>
+<span id="17"> 17</span>
+<span id="18"> 18</span>
+<span id="19"> 19</span>
+<span id="20"> 20</span>
+<span id="21"> 21</span>
+<span id="22"> 22</span>
+<span id="23"> 23</span>
+<span id="24"> 24</span>
+<span id="25"> 25</span>
+<span id="26"> 26</span>
+<span id="27"> 27</span>
+<span id="28"> 28</span>
+<span id="29"> 29</span>
+<span id="30"> 30</span>
+<span id="31"> 31</span>
+<span id="32"> 32</span>
+<span id="33"> 33</span>
+<span id="34"> 34</span>
+<span id="35"> 35</span>
+<span id="36"> 36</span>
+<span id="37"> 37</span>
+<span id="38"> 38</span>
+<span id="39"> 39</span>
+<span id="40"> 40</span>
+<span id="41"> 41</span>
+<span id="42"> 42</span>
+<span id="43"> 43</span>
+<span id="44"> 44</span>
+<span id="45"> 45</span>
+<span id="46"> 46</span>
+<span id="47"> 47</span>
+<span id="48"> 48</span>
+<span id="49"> 49</span>
+<span id="50"> 50</span>
+<span id="51"> 51</span>
+<span id="52"> 52</span>
+<span id="53"> 53</span>
+<span id="54"> 54</span>
+<span id="55"> 55</span>
+<span id="56"> 56</span>
+<span id="57"> 57</span>
+<span id="58"> 58</span>
+<span id="59"> 59</span>
+<span id="60"> 60</span>
+<span id="61"> 61</span>
+<span id="62"> 62</span>
+<span id="63"> 63</span>
+<span id="64"> 64</span>
+<span id="65"> 65</span>
+<span id="66"> 66</span>
+<span id="67"> 67</span>
+<span id="68"> 68</span>
+<span id="69"> 69</span>
+<span id="70"> 70</span>
+<span id="71"> 71</span>
+<span id="72"> 72</span>
+<span id="73"> 73</span>
+<span id="74"> 74</span>
+<span id="75"> 75</span>
+<span id="76"> 76</span>
+<span id="77"> 77</span>
+<span id="78"> 78</span>
+<span id="79"> 79</span>
+<span id="80"> 80</span>
+<span id="81"> 81</span>
+<span id="82"> 82</span>
+<span id="83"> 83</span>
+<span id="84"> 84</span>
+<span id="85"> 85</span>
+<span id="86"> 86</span>
+<span id="87"> 87</span>
+<span id="88"> 88</span>
+<span id="89"> 89</span>
+<span id="90"> 90</span>
+<span id="91"> 91</span>
+<span id="92"> 92</span>
+<span id="93"> 93</span>
+<span id="94"> 94</span>
+<span id="95"> 95</span>
+<span id="96"> 96</span>
+<span id="97"> 97</span>
+<span id="98"> 98</span>
+<span id="99"> 99</span>
+<span id="100">100</span>
+<span id="101">101</span>
+<span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+</pre><pre class='rust '>
+<span class='doccomment'>//! Abstractions for the replies passed back from i3.</span>
+
+<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
+
+<span class='doccomment'>/// The outcome of a single command.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>CommandOutcome</span> {
+    <span class='doccomment'>/// Whether the command was successful.</span>
+    <span class='kw'>pub</span> <span class='ident'>success</span>: <span class='ident'>bool</span>,
+    <span class='doccomment'>/// A human-readable error message.</span>
+    <span class='kw'>pub</span> <span class='ident'>error</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>
+}
+
+<span class='doccomment'>/// The reply to the `command` request.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Command</span> {
+    <span class='doccomment'>/// A list of `CommandOutcome` structs; one for each command that was parsed.</span>
+    <span class='kw'>pub</span> <span class='ident'>outcomes</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>CommandOutcome</span><span class='op'>&gt;</span>
+}
+
+<span class='doccomment'>/// A single workspace.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Workspace</span> {
+    <span class='doccomment'>/// The logical number of the workspace. Corresponds to the command to switch to this</span>
+    <span class='doccomment'>/// workspace. For named workspaces, this will be -1.</span>
+    <span class='kw'>pub</span> <span class='ident'>num</span>: <span class='ident'>i32</span>,
+    <span class='doccomment'>/// The name of this workspace (by default num+1), as changed by the user.</span>
+    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='ident'>String</span>,
+    <span class='doccomment'>/// Whether this workspace is currently visible on an output (multiple workspaces can be</span>
+    <span class='doccomment'>/// visible at the same time).</span>
+    <span class='kw'>pub</span> <span class='ident'>visible</span>: <span class='ident'>bool</span>,
+    <span class='doccomment'>/// Whether this workspace currently has the focus (only one workspace can have the focus</span>
+    <span class='doccomment'>/// at the same time).</span>
+    <span class='kw'>pub</span> <span class='ident'>focused</span>: <span class='ident'>bool</span>,
+    <span class='doccomment'>/// Whether a window on this workspace has the &quot;urgent&quot; flag set.</span>
+    <span class='kw'>pub</span> <span class='ident'>urgent</span>: <span class='ident'>bool</span>,
+    <span class='doccomment'>/// The rectangle of this workspace (equals the rect of the output it is on), consists of</span>
+    <span class='doccomment'>/// x, y, width, height.</span>
+    <span class='kw'>pub</span> <span class='ident'>rect</span>: (<span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>),
+    <span class='doccomment'>/// The video output this workspace is on (LVDS1, VGA1, …).</span>
+    <span class='kw'>pub</span> <span class='ident'>output</span>: <span class='ident'>String</span>
+}
+
+<span class='doccomment'>/// The reply to the `get_workspaces` request.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Workspaces</span> {
+    <span class='doccomment'>/// A list of workspaces.</span>
+    <span class='kw'>pub</span> <span class='ident'>workspaces</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Workspace</span><span class='op'>&gt;</span>,
+}
+
+<span class='doccomment'>/// The reply to the `subscribe` request.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Subscribe</span> {
+    <span class='doccomment'>/// Indicates whether the subscription was successful (the default) or whether a JSON</span>
+    <span class='doccomment'>/// parse error occurred.</span>
+    <span class='kw'>pub</span> <span class='ident'>success</span>: <span class='ident'>bool</span>,
+}
+
+<span class='doccomment'>/// A single output (display)</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Output</span> {
+    <span class='doccomment'>/// The name of this output (as seen in xrandr).</span>
+    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='ident'>String</span>,
+    <span class='doccomment'>/// Whether the output is currently active (has a valid mode).</span>
+    <span class='kw'>pub</span> <span class='ident'>active</span>: <span class='ident'>bool</span>,
+    <span class='doccomment'>/// The name of the current workspace that is visible on this output. None if the output is</span>
+    <span class='doccomment'>/// not active.</span>
+    <span class='kw'>pub</span> <span class='ident'>current_workspace</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
+    <span class='doccomment'>/// The rectangle of this output (equals the rect of the output it is on), consists of</span>
+    <span class='doccomment'>/// x, y, width, height.</span>
+    <span class='kw'>pub</span> <span class='ident'>rect</span>: (<span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>)
+}
+
+<span class='doccomment'>/// The reply to the `get_outputs` request.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Outputs</span> {
+    <span class='doccomment'>/// A list of outputs (displays)</span>
+    <span class='kw'>pub</span> <span class='ident'>outputs</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Output</span><span class='op'>&gt;</span>
+}
+
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>NodeType</span> {
+    <span class='ident'>Root</span>,
+    <span class='ident'>Output</span>,
+    <span class='ident'>Con</span>,
+    <span class='ident'>FloatingCon</span>,
+    <span class='ident'>Workspace</span>,
+    <span class='ident'>DockArea</span>
+}
+
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>NodeBorder</span> {
+    <span class='ident'>Normal</span>,
+    <span class='prelude-val'>None</span>,
+    <span class='ident'>Pixel</span>
+}
+
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>NodeLayout</span> {
+    <span class='ident'>SplitH</span>,
+    <span class='ident'>SplitV</span>,
+    <span class='ident'>Stacked</span>,
+    <span class='ident'>Tabbed</span>,
+    <span class='ident'>DockArea</span>,
+    <span class='ident'>Output</span>
+}
+
+<span class='doccomment'>/// The reply to the `get_tree` request.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Node</span> {
+    <span class='doccomment'>/// The child nodes of this container.</span>
+    <span class='kw'>pub</span> <span class='ident'>nodes</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Node</span><span class='op'>&gt;</span>,
+
+    <span class='doccomment'>/// The internal ID (actually a C pointer value) of this container. Do not make any</span>
+    <span class='doccomment'>/// assumptions about it. You can use it to (re-)identify and address containers when</span>
+    <span class='doccomment'>/// talking to i3.</span>
+    <span class='kw'>pub</span> <span class='ident'>id</span>: <span class='ident'>i32</span>,
+
+    <span class='doccomment'>/// The internal name of this container. For all containers which are part of the tree</span>
+    <span class='doccomment'>/// structure down to the workspace contents, this is set to a nice human-readable name of</span>
+    <span class='doccomment'>/// the container. For containers that have an X11 window, the content is the title</span>
+    <span class='doccomment'>/// (_NET_WM_NAME property) of that window. For all other containers, the content is not</span>
+    <span class='doccomment'>/// defined (yet).</span>
+    <span class='kw'>pub</span> <span class='ident'>name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
+
+    <span class='doccomment'>/// Type of this container. Can be one of &quot;root&quot;, &quot;output&quot;, &quot;con&quot;, &quot;floating_con&quot;,</span>
+    <span class='doccomment'>/// &quot;workspace&quot; or &quot;dockarea&quot;. </span>
+    <span class='kw'>pub</span> <span class='ident'>nodetype</span>: <span class='ident'>NodeType</span>,
+
+    <span class='doccomment'>/// Can be either &quot;normal&quot;, &quot;none&quot; or &quot;1pixel&quot;, dependending on the container’s border</span>
+    <span class='doccomment'>/// style. </span>
+    <span class='kw'>pub</span> <span class='ident'>border</span>: <span class='ident'>NodeBorder</span>,
+
+    <span class='doccomment'>/// Number of pixels of the border width.</span>
+    <span class='kw'>pub</span> <span class='ident'>current_border_width</span>: <span class='ident'>i32</span>,
+
+    <span class='doccomment'>/// Can be either &quot;splith&quot;, &quot;splitv&quot;, &quot;stacked&quot;, &quot;tabbed&quot;, &quot;dockarea&quot; or &quot;output&quot;. Other values</span>
+    <span class='doccomment'>/// might be possible in the future, should we add new layouts.</span>
+    <span class='kw'>pub</span> <span class='ident'>layout</span>: <span class='ident'>NodeLayout</span>,
+
+    <span class='doccomment'>/// The percentage which this container takes in its parent. A value of null means that the</span>
+    <span class='doccomment'>/// percent property does not make sense for this container, for example for the root</span>
+    <span class='doccomment'>/// container. </span>
+    <span class='kw'>pub</span> <span class='ident'>percent</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>f64</span><span class='op'>&gt;</span>,
+
+    <span class='doccomment'>/// The (x, y, width, height) absolute display coordinates for this container. Display</span>
+    <span class='doccomment'>/// coordinates means that when you have two 1600x1200 monitors on a single X11 Display</span>
+    <span class='doccomment'>/// (the standard way), the coordinates of the first window on the second monitor are</span>
+    <span class='doccomment'>/// (1600, 0, 1600, 1200).</span>
+    <span class='kw'>pub</span> <span class='ident'>rect</span>: (<span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>),
+
+    <span class='doccomment'>/// The (x, y, width, height) coordinates of the actual client window inside its container.</span>
+    <span class='doccomment'>/// These coordinates are  relative to the container and do not include the window</span>
+    <span class='doccomment'>/// decoration (which is actually rendered on the parent container). So for example, when</span>
+    <span class='doccomment'>/// using the default layout, you will have a 2 pixel border on each side, making the</span>
+    <span class='doccomment'>/// window_rect (2, 0, 632, 366).</span>
+    <span class='kw'>pub</span> <span class='ident'>window_rect</span>: (<span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>),
+
+    <span class='doccomment'>/// The (x, y, width, height) coordinates of the window decoration inside its container.</span>
+    <span class='doccomment'>/// These coordinates are relative to the container and do not include the actual client</span>
+    <span class='doccomment'>/// window. </span>
+    <span class='kw'>pub</span> <span class='ident'>deco_rect</span>: (<span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>),
+
+    <span class='doccomment'>/// The original geometry the window specified when i3 mapped it. Used when switching a</span>
+    <span class='doccomment'>/// window to floating mode, for example. </span>
+    <span class='kw'>pub</span> <span class='ident'>geometry</span>: (<span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>, <span class='ident'>i32</span>),
+
+    <span class='doccomment'>/// The X11 window ID of the actual client window inside this container. This field is set</span>
+    <span class='doccomment'>/// to null for split containers or otherwise empty containers. This ID corresponds to what</span>
+    <span class='doccomment'>/// xwininfo(1) and other X11-related tools display (usually in hex). </span>
+    <span class='kw'>pub</span> <span class='ident'>window</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>i32</span><span class='op'>&gt;</span>,
+
+    <span class='doccomment'>/// Whether this container (window or workspace) has the urgency hint set. </span>
+    <span class='kw'>pub</span> <span class='ident'>urgent</span>: <span class='ident'>bool</span>,
+
+    <span class='doccomment'>/// Whether this container is currently focused.</span>
+    <span class='kw'>pub</span> <span class='ident'>focused</span>: <span class='ident'>bool</span>,
+}
+
+<span class='doccomment'>/// The reply to the `get_marks` request.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Consists of a single vector of strings for each container that has a mark. A mark can only</span>
+<span class='doccomment'>/// be set on one container, so the vector is unique. The order of that vector is undefined. If</span>
+<span class='doccomment'>/// no window has a mark the response will be an empty vector.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Marks</span> {
+    <span class='kw'>pub</span> <span class='ident'>marks</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>
+}
+
+<span class='doccomment'>/// The reply to the `get_bar_ids` request.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// This can be used by third-party workspace bars (especially i3bar, but others are free to</span>
+<span class='doccomment'>/// implement compatible alternatives) to get the bar block configuration from i3.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BarIds</span> {
+    <span class='doccomment'>/// A vector of configured bar IDs.</span>
+    <span class='kw'>pub</span> <span class='ident'>ids</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>
+}
+
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Hash</span>, <span class='ident'>Eq</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>ColorableBarPart</span> {
+    <span class='doccomment'>/// Background color of the bar.</span>
+    <span class='ident'>Background</span>,
+
+    <span class='doccomment'>/// Text color to be used for the statusline.</span>
+    <span class='ident'>Statusline</span>,
+
+    <span class='doccomment'>/// Text color to be used for the separator.</span>
+    <span class='ident'>Separator</span>,
+
+    <span class='doccomment'>/// Text color for a workspace button when the workspace has focus.</span>
+    <span class='ident'>FocusedWorkspaceText</span>,
+
+    <span class='doccomment'>/// Background color for a workspace button when the workspace has focus.</span>
+    <span class='ident'>FocusedWorkspaceBg</span>,
+
+    <span class='doccomment'>/// Border color for a workspace button when the workspace has focus.</span>
+    <span class='ident'>FocusedWorkspaceBorder</span>,
+
+    <span class='doccomment'>/// Text color for a workspace button when the workspace is active (visible) on some</span>
+    <span class='doccomment'>/// output, but the focus is on another one. You can only tell this apart from the</span>
+    <span class='doccomment'>/// focused workspace when you are using multiple monitors. </span>
+    <span class='ident'>ActiveWorkspaceText</span>,
+
+    <span class='doccomment'>/// Background color for a workspace button when the workspace is active (visible) on some</span>
+    <span class='doccomment'>/// output, but the focus is on another one. You can only tell this apart from the</span>
+    <span class='doccomment'>/// focused workspace when you are using multiple monitors. </span>
+    <span class='ident'>ActiveWorkspaceBg</span>,
+
+    <span class='doccomment'>/// Border color for a workspace button when the workspace is active (visible) on some</span>
+    <span class='doccomment'>/// output, but the focus is on another one. You can only tell this apart from the</span>
+    <span class='doccomment'>/// focused workspace when you are using multiple monitors. </span>
+    <span class='ident'>ActiveWorkspaceBorder</span>,
+
+    <span class='doccomment'>/// Text color for a workspace button when the workspace does not have focus and is not</span>
+    <span class='doccomment'>/// active (visible) on any output. This will be the case for most workspaces.</span>
+    <span class='ident'>InactiveWorkspaceText</span>,
+
+    <span class='doccomment'>/// Background color for a workspace button when the workspace does not have focus and is</span>
+    <span class='doccomment'>/// not active (visible) on any output. This will be the case for most workspaces.</span>
+    <span class='ident'>InactiveWorkspaceBg</span>,
+
+    <span class='doccomment'>/// Border color for a workspace button when the workspace does not have focus and is</span>
+    <span class='doccomment'>/// not active (visible) on any output. This will be the case for most workspaces.</span>
+    <span class='ident'>InactiveWorkspaceBorder</span>,
+
+    <span class='doccomment'>/// Text color for workspaces which contain at least one window with the urgency hint set.</span>
+    <span class='ident'>UrgentWorkspaceText</span>,
+
+    <span class='doccomment'>/// Background color for workspaces which contain at least one window with the urgency hint</span>
+    <span class='doccomment'>/// set.</span>
+    <span class='ident'>UrgentWorkspaceBg</span>,
+
+    <span class='doccomment'>/// Border color for workspaces which contain at least one window with the urgency hint set.</span>
+    <span class='ident'>UrgentWorkspaceBorder</span>,
+
+    <span class='doccomment'>/// Text color for the binding mode indicator.</span>
+    <span class='ident'>BindingModeText</span>,
+
+    <span class='doccomment'>/// Background color for the binding mode indicator.</span>
+    <span class='ident'>BindingModeBg</span>,
+
+    <span class='doccomment'>/// Border color for the binding mode indicator.</span>
+    <span class='ident'>BindingModeBorder</span>,
+
+    <span class='doccomment'>/// A colorable bar part that was not documented. (The String is its name).</span>
+    <span class='ident'>Undocumented</span>(<span class='ident'>String</span>)
+}
+
+<span class='doccomment'>/// The reply to the `get_bar_config` request.</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// This can be used by third-party workspace bars (especially i3bar, but others are free to</span>
+<span class='doccomment'>/// implement compatible alternatives) to get the bar block configuration from i3.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>BarConfig</span> {
+    <span class='doccomment'>/// The ID for this bar. Included in case you request multiple configurations and want to</span>
+    <span class='doccomment'>/// differentiate the different replies.</span>
+    <span class='kw'>pub</span> <span class='ident'>id</span>: <span class='ident'>String</span>,
+
+    <span class='doccomment'>/// Either dock (the bar sets the dock window type) or hide (the bar does not show unless a</span>
+    <span class='doccomment'>/// specific key is pressed). </span>
+    <span class='kw'>pub</span> <span class='ident'>mode</span>: <span class='ident'>String</span>,
+
+    <span class='doccomment'>/// Either bottom or top at the moment.</span>
+    <span class='kw'>pub</span> <span class='ident'>position</span>: <span class='ident'>String</span>,
+
+    <span class='doccomment'>/// Command which will be run to generate a statusline. Each line on stdout of this command</span>
+    <span class='doccomment'>/// will be displayed in the bar. At the moment, no formatting is supported. </span>
+    <span class='kw'>pub</span> <span class='ident'>status_command</span>: <span class='ident'>String</span>,
+
+    <span class='doccomment'>/// The font to use for text on the bar.</span>
+    <span class='kw'>pub</span> <span class='ident'>font</span>: <span class='ident'>String</span>,
+
+    <span class='doccomment'>/// Display workspace buttons or not? Defaults to true.</span>
+    <span class='kw'>pub</span> <span class='ident'>workspace_buttons</span>: <span class='ident'>bool</span>,
+
+    <span class='doccomment'>/// Display the mode indicator or not? Defaults to true.</span>
+    <span class='kw'>pub</span> <span class='ident'>binding_mode_indicator</span>: <span class='ident'>bool</span>,
+
+    <span class='doccomment'>/// Should the bar enable verbose output for debugging? Defaults to false.</span>
+    <span class='kw'>pub</span> <span class='ident'>verbose</span>: <span class='ident'>bool</span>,
+
+    <span class='doccomment'>/// Contains key/value pairs of colors. Each value is a color code in hex, formatted</span>
+    <span class='doccomment'>/// \#rrggbb (like in HTML).</span>
+    <span class='kw'>pub</span> <span class='ident'>colors</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='ident'>ColorableBarPart</span>, <span class='ident'>String</span><span class='op'>&gt;</span>,
+}
+
+<span class='doccomment'>/// The reply to the `get_version` request.</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
+<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Version</span> {
+    <span class='doccomment'>/// The major version of i3, such as 4. </span>
+    <span class='kw'>pub</span> <span class='ident'>major</span>: <span class='ident'>i32</span>,
+    
+    <span class='doccomment'>/// The minor version of i3, such as 2. Changes in the IPC interface (new features) will</span>
+    <span class='doccomment'>/// only occur with new minor (or major) releases. However, bugfixes might be introduced in</span>
+    <span class='doccomment'>/// patch releases, too. </span>
+    <span class='kw'>pub</span> <span class='ident'>minor</span>: <span class='ident'>i32</span>,
+    
+    <span class='doccomment'>/// The patch version of i3, such as 1 (when the complete version is 4.2.1). For versions</span>
+    <span class='doccomment'>/// such as 4.2, patch will be set to 0. </span>
+    <span class='kw'>pub</span> <span class='ident'>patch</span>: <span class='ident'>i32</span>,
+
+    <span class='doccomment'>/// A human-readable version of i3 containing the precise git version, build date and</span>
+    <span class='doccomment'>/// branch name. When you need to display the i3 version to your users, use the</span>
+    <span class='doccomment'>/// human-readable version whenever possible (since this is what i3 --version displays,</span>
+    <span class='doccomment'>/// too). </span>
+    <span class='kw'>pub</span> <span class='ident'>human_readable</span>: <span class='ident'>String</span>,
+
+    <span class='doccomment'>/// The current config path.</span>
+    <span class='kw'>pub</span> <span class='ident'>loaded_config_file_name</span>: <span class='ident'>String</span>
+}
+</pre>
+</section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../../../";
+        window.currentCrate = "i3ipc";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
+    
+    <script defer src="../../../search-index.js"></script>
+</body>
+</html>
